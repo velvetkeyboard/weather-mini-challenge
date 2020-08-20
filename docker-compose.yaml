@@ -1,0 +1,23 @@
+version: '3.0'
+services:
+  webapp:
+    image: weather/webapp:local
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./frontend/src/:/usr/src/app/src/"
+      - "./frontend/.env:/usr/src/app/.env"
+
+  api:
+    image: weather/api:local
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./backend/:/usr/src/app/"
