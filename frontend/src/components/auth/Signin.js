@@ -3,6 +3,9 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../../actions';
 import ClientApi from '../../WeatherApi';
+import {
+  Link
+} from "react-router-dom";
 
 function Signup() {
   const history = useHistory();
@@ -22,7 +25,14 @@ function Signup() {
             return response.json();
           } else {
             dispatch(actions.signUpRequestWasReceived());
-            console.log('SignIn failed!');
+            if (response.status === 401 ){
+              throw Error("Application is not authorized");
+            }
+            else if (response.status === 400) {
+              throw Error("Incorrect credentials");
+            } else {
+              throw Error("Cannot perform this action now");
+            }
           }
         })
       .then(data => {
@@ -30,6 +40,9 @@ function Signup() {
           dispatch(actions.setUserAsAuthenticated());
           dispatch(actions.cleanUpSignUpData());
           history.push("/dashboard");
+        })
+      .catch(error => {
+          alert(error);
         });
   };
 
@@ -62,6 +75,7 @@ function Signup() {
             <input onChange={onChangePassword} type="password" className="form-control" id="exampleInputPassword1" disabled={signUpWaitingRequest}/>
           </div>
           <button onClick={onClickSubmit} disabled={signUpWaitingRequest} className="btn btn-block btn-primary">Sign In</button>
+          <Link to="/signup" disabled={signUpWaitingRequest} className="btn btn-block btn-success">Go Premium! Sign Up</Link>
         </div>
       </div>
     </div>

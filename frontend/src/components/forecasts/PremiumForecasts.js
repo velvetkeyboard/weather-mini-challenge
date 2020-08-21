@@ -47,23 +47,31 @@ function PremiumForecasts() {
         });
   }
 
+  const isFormValid = () => {
+    return location.length > 0;
+  }
+
   const onClickSaveLocation = (e) => {
-    client.newLocation(location)
-      .then(response => {
-          if (response.status !== 201) {
-            console.log('Saving New Location Failed!');
-            throw Error(response);
-          } else {
-            return response.json();
-          }
-        })
-      .then(data => {
-        console.log('Saving New Location Worked!');
-        refreshLocations()
-        })
-      .catch(error => {
-          console.log(error);
-        });
+    if (isFormValid()) {
+      client.newLocation(location)
+        .then(response => {
+            if (response.status !== 201) {
+              console.log('Saving New Location Failed!');
+              throw Error(response);
+            } else {
+              return response.json();
+            }
+          })
+        .then(data => {
+          console.log('Saving New Location Worked!');
+          refreshLocations()
+          })
+        .catch(error => {
+            console.log(error);
+          });
+    } else {
+      alert('Cannot save blank as location');
+    }
   }
 
   return (

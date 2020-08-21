@@ -13,38 +13,61 @@ function Signup() {
   const isUserAuthenticated = useSelector(state => state.isUserAuthenticated);
   const client = new ClientApi();
 
+  const isFormValid = () => {
+    return email.length > 0 && password.length > 0;
+  }
+
   const onClickSubmit = (e) => {
-    console.log('submitting form ' + email + ' / ' + password)
-    dispatch(actions.signUpRequestWasDispatched());
-    client.signUp(
-      email,
-      password,
-      ).then(response => {
-          if (response.status !== 201) {
-            dispatch(actions.signUpRequestWasReceived());
-            console.log('SignUp failed!');
-          } else {
-            return response.json();
-          }
-        })
-      .then(data => {
-          console.log('SignUp data: ' + data);
-          client.signIn(data.username, password)
-            .then(response => {
-                if (response.status === 200) {
-                  return response.json();
-                } else {
-                  dispatch(actions.signUpRequestWasReceived());
-                  console.log('SignIn failed!');
-                }
-              })
-            .then(data => {
-                dispatch(actions.setUserToken(data.token));
-                dispatch(actions.setUserAsAuthenticated());
-                dispatch(actions.cleanUpSignUpData());
-                history.push("/dashboard");
-              });
-        });
+    if (isFormValid()) {
+      dispatch(actions.signUpRequestWasDispatched());
+      client.signUp(
+        email,
+        password,
+        ).then(response => {
+            if (response.status !== 201) {
+              dispatch(actions.signUpRequestWasReceived());
+
+              if (response.status === 401 ){
+                throw Error("Application is not authorized");
+              }
+              else if (response.status === 400 ) {
+                throw Error("email and password are not valid");
+              } else {
+                throw Error("Cannot perform this action now");
+              }
+
+            } else {
+              return response.json();
+            }
+          })
+        .then(data => {
+            console.log('SignUp data: ' + data);
+            client.signIn(data.username, password)
+              .then(response => {
+                  if (response.status === 200) {
+                    return response.json();
+                  } else {
+                    dispatch(actions.signUpRequestWasReceived());
+                    throw Error("Cannot perform this action now");
+                  }
+                })
+              .then(data => {
+                  dispatch(actions.setUserToken(data.token));
+                  dispatch(actions.setUserAsAuthenticated());
+                  dispatch(actions.cleanUpSignUpData());
+                  history.push("/dashboard");
+                })
+              .catch(error => {
+                alert(error);
+                history.push("/signin");
+                });
+          })
+        .catch(error => {
+          alert(error);
+          });
+    } else {
+      alert('Email and Password cannot be blank');
+    }
   };
 
   const onChangeEmail = (e) => {
