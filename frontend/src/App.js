@@ -1,32 +1,23 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { connect } from 'react-redux'
+import { useHistory } from "react-router-dom";
 import * as actions from './actions'
 import ClientApi from './WeatherApi';
-
+import {
+  Link
+} from "react-router-dom";
 
 function App() {
+  const history = useHistory();
   const dispatch = useDispatch();
+  const userToken = useSelector(state => state.userToken);
   const location = useSelector(state => state.location);
-  const typingLocation = useSelector(state => state.typingLocation);
+  const isUserAuthenticated = useSelector(state => state.isUserAuthenticated);
+  const typingLocationTimeout = useSelector(state => state.typingLocationTimeout);
+  const client = new ClientApi(userToken);
 
-  if (typingLocation + location.length === 0 && location.length > 0) {
-    let client = new ClientApi();
-    let headers = client.getHeaders();
-    let url = client.getCheckWeatherUrl(location)
-
-    fetch(url, {headers,})
-      .then(response => {
-        if (response.status !== 200) {
-          return []
-        } else {
-          return response.json()
-        }
-      })
-      .then(data => 
-        dispatch(actions.fiveDaysForecastRequested(data))
-      );
-
+  if (isUserAuthenticated) {
+    history.push("/dashboard");
   }
 
   if (location.length === 0) {
@@ -35,14 +26,25 @@ function App() {
   }
 
   const onChangeLocation = (e) => {
-    let newLocation = e.target.value;
-    dispatch(actions.typingLocation(1));
-    dispatch(actions.locationChanged(newLocation));
-
-    setTimeout(() => {
-      dispatch(actions.typingLocation(-2));
-    }, 1000);
-  }
+    let value = e.target.value;
+    dispatch(actions.locationChanged(value));
+    clearTimeout(typingLocationTimeout);
+    const requestForecast = setTimeout(() => {
+      client.getDemoForecasts(value)
+        .then(response => {
+            if (response.status !== 200) {
+              console.log('Getting Forecasts Failed!');
+              return [];
+            } else {
+              return response.json();
+            }
+          })
+        .then(data => {
+            dispatch(actions.fiveDaysForecastRequested(data));
+          });
+    }, 700);
+    dispatch(actions.setTypingLocationTimeout(requestForecast));
+  };
 
   return (
     <section className="jumbotron text-center">
@@ -58,6 +60,8 @@ function App() {
           <div className="col-md-6 offset-md-3">
             <div className="form-group">
               <input onChange={onChangeLocation} className="form-control" placeholder="Location"></input>
+              <br />
+              <Link className="btn btn-warning" to="/plans">Go beyond. Go Premium</Link>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 const mapStateToProps = (state) => ({ 
   currentLocation: state.location,
   forecasts: state.forecasts,
+  userToken: state.userToken,
 });
 
 class Forecasts extends React.Component {
@@ -19,7 +20,7 @@ class Forecasts extends React.Component {
   render() {
     // render your component
     const forecastsColumns = this.props.forecasts.map((f) =>
-      <div className="col-md-4" key={f.dt}>
+      <div className="col-sm-8 col-md-6" key={f.dt}>
         <div className="card mb-4 shadow-sm" style={{margin: "10px"}}>
           {/* <img src="..." class="card-img-top" alt="..."> */}
           <div className="card-body">
@@ -45,6 +46,30 @@ class Forecasts extends React.Component {
       </div>
       );
     return this.props.forecasts.length ? (
+      <div className="container">
+        <div className="row">
+          {
+            forecastsColumns.length ? (
+              <div className="col-md">
+                <h4 className="text-center">
+                  Next { this.props.userToken.length > 0 ? 'Seven' : 'Five' } Days Forecast for {this.props.currentLocation}
+                </h4>
+              </div>
+            ) : ''
+          }
+        </div>
+        <div className="row">
+          {forecastsColumns}
+        </div>
+      </div>
+    ) : ('') ;
+  }
+}
+
+export default connect(mapStateToProps)(Forecasts);
+
+/*
+
       <div className="album py-5 bg-light">
         <div className="container">
           <div className="row">
@@ -63,8 +88,5 @@ class Forecasts extends React.Component {
           </div>
         </div>
       </div>
-    ) : ('') ;
-  }
-}
 
-export default connect(mapStateToProps)(Forecasts);
+*/ 
