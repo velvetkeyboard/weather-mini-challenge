@@ -1,0 +1,12 @@
+[flake8]
+exclude = __pycache__/*,env/*,.git/*
+max-line-length = 80
+per-file-ignores =
+    ./*/tests/__init__.py:F401
+    ./cfg/settings.py:E402,E501
+    ./cfg/wsgi.py:E402
+    ./*/migrations/*:E501
+    ./*/urls.py:E501
+    ./authentication/authenticators.py:E501
+    ./authentication/apps.py:F401
+    ./openweather_api/endpoints/__init__.py:F401,F403

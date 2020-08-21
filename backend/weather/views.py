@@ -1,6 +1,5 @@
 from datetime import datetime
 from django.conf import settings
-from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework.views import APIView
@@ -21,16 +20,18 @@ class CityWeather(APIView):
         forecasts = self.get_forecasts(name)[:limit]
         for forecast in forecasts:
             datetime_obj = datetime.fromtimestamp(forecast['dt'])
+            sunrise_obj = datetime.fromtimestamp(forecast['sunrise'])
+            sunset_obj = datetime.fromtimestamp(forecast['sunset'])
             forecast['date'] = datetime_obj.strftime('%m/%d')
-            forecast['sunset_hour'] = datetime_obj.strftime('%H:%M')
-            forecast['sunrise_hour'] = datetime_obj.strftime('%H:%M')
+            forecast['sunrise_hour'] = sunrise_obj.strftime('%H:%M')
+            forecast['sunset_hour'] = sunset_obj.strftime('%H:%M')
             forecast['weekday'] = datetime_obj.strftime('%A')
             forecast['umbrella'] = False
 
             if forecast['humidity'] > settings.UMBRELLA_WEATHER_THRESHOLD:
-                forecast['umbrella'] = True 
+                forecast['umbrella'] = True
 
-        return Response(forecasts)
+        return Response(forecasts, status=status.HTTP_200_OK)
 
     def get_forecasts_limit(self):
         return settings.FORESTCASTS

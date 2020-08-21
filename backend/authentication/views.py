@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
@@ -24,12 +23,21 @@ class SignIn(APIView):
 
     def post(self, request):
         serializer = SignInSerializer(data=request.data)
-        if serializer.is_valid():
-            username, password = serializer.save()
-            user = get_user_model().objects.get(username=username)
-            valid = user.check_password(password)
-            if valid:
-                token = Token.objects.get(user=user)
-                return Response({'token': token.key}, status=status.HTTP_200_OK)
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        username, password = serializer.save()
+
+        if not get_user_model().objects.filter(username=username).exists():
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_user_model().objects.get(username=username)
+
+        if not user.check_password(password):
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+        token = Token.objects.get(user=user)
+        return Response({'token': token.key}, status=status.HTTP_200_OK)

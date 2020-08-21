@@ -20,7 +20,6 @@ class SignInSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, max_length=255)
     password = serializers.CharField(required=True, max_length=255)
 
-
     def create(self, validated_data):
         username = validated_data.pop('username')
         password = validated_data.pop('password')

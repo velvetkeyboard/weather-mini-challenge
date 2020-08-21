@@ -1,0 +1,1 @@
+from weather.tests.umbrella_time import UmbrellaTimeTestCase

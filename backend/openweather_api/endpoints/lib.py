@@ -1,5 +1,4 @@
 import requests
-from django.conf import settings
 from openweather_api.exceptions import EndpointDoesNotSupportedMethod
 
 

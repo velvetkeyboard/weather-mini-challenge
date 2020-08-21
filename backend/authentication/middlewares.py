@@ -1,7 +1,4 @@
-from django.contrib.auth import get_user_model
-from django.http import HttpResponseForbidden
 from rest_framework.authtoken.models import Token
-from rest_framework import HTTP_HEADER_ENCODING
 
 
 def premium_user_authorization_token(get_response):

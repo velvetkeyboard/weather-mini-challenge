@@ -12,3 +12,4 @@ class EndpointDoesNotSupportedMethod(Exception):
             method,
             endpoint.methods,
             )
+        super().__init__(msg)

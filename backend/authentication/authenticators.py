@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 
@@ -12,7 +13,6 @@ def get_user_authorization_header(request):
     if isinstance(auth, str):
         # Work around django test client oddness
         auth = auth.encode(HTTP_HEADER_ENCODING)
-    print('get_user_authorization_header', auth)
     return auth
 
 
