@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as actions from './actions';
-import ClientApi from './WeatherApi';
+import * as actions from '../../actions';
+import ClientApi from '../../WeatherApi';
 import Forecasts from './Forecasts';
 
 function PremiumForecasts() {

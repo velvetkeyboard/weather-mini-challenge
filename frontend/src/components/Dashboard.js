@@ -5,9 +5,9 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import ClientApi from './WeatherApi';
-import * as actions from './actions';
-import PremiumForecasts from './PremiumForecasts';
+import ClientApi from '../WeatherApi';
+import * as actions from '../actions';
+import PremiumForecasts from './forecasts/PremiumForecasts';
 // import NewLocation from './NewLocation';
 
 function Dashboard() {

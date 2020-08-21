@@ -5,20 +5,19 @@ import * as serviceWorker from './serviceWorker';
 import { store, persistor } from  './store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
-import Navigation from './Navigation';
-import Footer from './Footer';
-import App from './App';
-import Forecasts from './Forecasts';
-import Plans from './Plans';
-import Signup from './Signup';
-import Signin from './Signin';
-import Dashboard from './Dashboard';
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
+import App from './components/forecasts/ForecastsDemo';
+import Forecasts from './components/forecasts/Forecasts';
+import Plans from './components/Plans';
+import Signup from './components/auth/Signup';
+import Signin from './components/auth/Signin';
+import Dashboard from './components/Dashboard';
 
 store.subscribe(() => {
   console.log("Store Changed!", store.getState());

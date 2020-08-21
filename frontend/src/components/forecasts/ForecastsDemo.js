@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
-import * as actions from './actions'
-import ClientApi from './WeatherApi';
+import * as actions from '../../actions'
+import ClientApi from '../../WeatherApi';
 import {
   Link
 } from "react-router-dom";
 
-function App() {
+function ForecastsDemo() {
   const history = useHistory();
   const dispatch = useDispatch();
   const userToken = useSelector(state => state.userToken);
@@ -70,5 +70,4 @@ function App() {
   );
 }
 
-export default App;
-// export default connect(mapStateToProps)(App);
+export default ForecastsDemo;
