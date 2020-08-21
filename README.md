@@ -22,6 +22,19 @@ For instance, if on the next five days air humidity will be greater than 70% on 
 
 ## Running
 
+### TL;DR
+
+1. Build images, spinup containers, migrate and restore db  `make respin`
+2. Navigate to http://localhost:8000/admin/authtoken/token/
+3. Copy the content from "KEY" column from "app_weather" and past it on
+  `frontend/.env` where it says `REACT_APP_WEATHER_API_KEY=`
+4. Restart the container just to synchronize the changes `make restart`
+ Navigate to http://localhost:3000 to test the service
+
+## Make Targets
+
+### Spin Up & Down
+
 - create both servers `make spinup`
 
 - destroy both servers `make spindown`
@@ -32,18 +45,21 @@ For instance, if on the next five days air humidity will be greater than 70% on 
 
 - stop both servers `make stop`
 
-## Logs
+### Logs
 
 - backend `make backend_logs`
 
 - frontend `make frontend_logs`
 
-## Container Shell
+### Container Shell
 
 - backend `make backend_shell`
 
 - frontend `make frontend_shell`
 
+## Restoring Sample Backend data
+
+- `make backend_restore_sample`
 
 ## URLs
 
@@ -51,16 +67,40 @@ For instance, if on the next five days air humidity will be greater than 70% on 
 
 - backend: https://localhost:3000
 
-- Anonymous Weather Data: https://localhost:3000/api/weather/demo/city/<name>
-
-- Authenticated Weather Data: https://localhost:3000/api/weather/city/<name>
-
 - Swagger: http://localhost:8000/swagger/
 
-## Restoring Sample Backend data
 
-`make backend_restore_sample`
+## Q&A
 
-This will add the base admin and sample token authorization on the db:
+- Why not OAuth2 ?
 
-- Token: `88bd73f2f1ffbd6ef603369743d4e7264d83c5a5`
+Had to balance time between other assignments so started with the basic token
+to build the MVP and if I had enough time after that the migration to OAuth2
+would happen.
+
+But in the other hand extending the Basic Token workflow gave me the chance to
+explore and show how easy it is to customize/extend Django components
+
+- Where's my email notification and newsletter
+
+Next release. I promise. We will give a life time discount to anyone who
+keeps their accounts until then.
+
+- Why not Kubernetes?
+
+I don't know where this is going to be deployed. Spending time writing up the
+pods would not pay out if this would be later deployed at AWS ECS.
+
+- Where's the front-end tests?
+
+Yeah. About that... Next release?
+
+- Why Makefile?
+
+1. It's already installed on most of the Linux based servers
+2. Syntax is easy to read
+
+
+- Why frontend app is running on the dev server?
+
+Local Development craves for Hot Reload.
