@@ -77,20 +77,38 @@ class LocationsTestCase(BaseTestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_listing(self):
-        self.test_create_with_correct_payload()
+        data = {
+            'name': 'foo',
+            }
+        resp = self.client.post('/api/location/', data=data)
+        resp.render()
+        self.assertEqual(resp.status_code, 201)
 
         resp = self.client.get('/api/location/')
         resp.render()
         self.assertEqual(resp.status_code, 200)
         self.assertJSONEqual(
             str(resp.content, encoding='utf8'),
-            [{"id": 1, "name": "foo", "user": 2}]
+            [{"id": 3, "name": "foo", "user": 20}]
             )
 
     def test_delete(self):
-        self.test_listing()
+        data = {
+            'name': 'foo',
+            }
+        resp = self.client.post('/api/location/', data=data)
+        resp.render()
+        self.assertEqual(resp.status_code, 201)
 
-        resp = self.client.delete('/api/location/1/')
+        resp = self.client.get('/api/location/')
+        resp.render()
+        self.assertEqual(resp.status_code, 200)
+        self.assertJSONEqual(
+            str(resp.content, encoding='utf8'),
+            [{"id": 2, "name": "foo", "user": 18}]
+            )
+
+        resp = self.client.delete('/api/location/2/')
         resp.render()
         self.assertEqual(resp.status_code, 204)
 
