@@ -10,6 +10,8 @@ start:
 stop:
 	$(compose) stop
 
+restart: stop start
+
 spinup:
 	$(compose) up -d --build
 	docker exec -ti $(domain)_$(backend_container_name)_1 sh -c \
