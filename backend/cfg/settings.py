@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'openweather_api',
     'weather',
+    'location',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'authentication.middlewares.premium_user_authorization_token',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -126,7 +129,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+from corsheaders.defaults import default_headers
+
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'User-Authorization',
+]
 OPENWEATHER_KEY = 'aa9aa544419366f603bd1f82f16cf345'
 FORESTCASTS = 5
 FORESTCASTS_PREMIUM = 7
